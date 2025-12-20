@@ -540,12 +540,14 @@ h2 {
     height: 4vw;
     min-width: 23px;  /* tamanho mínimo para mobile */
     min-height: 23px;
+    max-width: 32px;  /* tamanho máximo para desktop */
+    max-height: 32px;
     border-radius: 50%;
     border: 2px solid #000;
     background-color: #EF2F95;
     color: #fff;
-    font-size: 2vw;
-    font-weight: 700;
+    font-size: clamp(2vw, 3vw, 3vw);
+    font-weight: 500;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -851,8 +853,6 @@ a:focus-visible {
 }
 
 .slide img {
-    
-    
     height: auto;          
     width: 70%;
     max-height: 400px;
@@ -865,7 +865,7 @@ a:focus-visible {
 
 /* Slide de informações */
 .slide-info {
-    padding: 0px 80px 0px 80px;
+    padding: 1vw 2vw;
     background: #F2F19B;
     border-radius: 12px;
     min-height: 250px;
@@ -911,7 +911,7 @@ a:focus-visible {
     background: rgba(239, 47, 149, 0.9);
     color: white;
     border: none;
-    font-size: 2rem;
+    font-size: clamp(1rem, 2rem, 4rem);
     padding: 4px 12px;
     cursor: pointer;
     border-radius: 6px;
@@ -921,11 +921,11 @@ a:focus-visible {
 }
 
 .slide-nav.prev {
-    left: 10px;
+    left: 20px;
 }
 
 .slide-nav.next {
-    right: 10px;
+    right: 20px;
 }
 
 .slide-nav:hover {
