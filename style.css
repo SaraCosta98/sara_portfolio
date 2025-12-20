@@ -865,7 +865,7 @@ a:focus-visible {
 
 /* Slide de informações */
 .slide-info {
-    padding: 1vw 2vw;
+    padding: 0px 50px 0px 50px;
     background: #F2F19B;
     border-radius: 12px;
     min-height: 250px;
@@ -911,7 +911,7 @@ a:focus-visible {
     background: rgba(239, 47, 149, 0.9);
     color: white;
     border: none;
-    font-size: clamp(1rem, 2rem, 4rem);
+    font-size: 2rem;
     padding: 4px 12px;
     cursor: pointer;
     border-radius: 6px;
@@ -920,12 +920,18 @@ a:focus-visible {
 
 }
 
+@media (max-width: 768px) {
+    .slide-nav {
+        display: none !important;
+    }
+}
+
 .slide-nav.prev {
-    left: 20px;
+    left: 5px;
 }
 
 .slide-nav.next {
-    right: 20px;
+    right: 0px;
 }
 
 .slide-nav:hover {
