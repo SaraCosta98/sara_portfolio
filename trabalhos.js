@@ -337,7 +337,7 @@ function initSlideshow() {
     function showSlide(index) {
         slides.forEach(slide => slide.classList.remove('active'));
         dots.forEach(dot => dot.classList.remove('active'));
-        
+
         if (slides[index]) {
             slides[index].classList.add('active');
         }
@@ -368,19 +368,59 @@ function initSlideshow() {
         });
     });
 
-    // Keyboard navigation
-    const handleKeyboard = (e) => {
-        if (e.key === 'ArrowLeft') {
-            const newIndex = (currentSlide - 1 + slides.length) % slides.length;
-            showSlide(newIndex);
-        } else if (e.key === 'ArrowRight') {
-            const newIndex = (currentSlide + 1) % slides.length;
-            showSlide(newIndex);
+    function initSlideshow() {
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.slide-dot');
+        let index = 0;
+        let startX = 0;
+        let endX = 0;
+
+        function showSlide(newIndex) {
+            slides[index].classList.remove('active');
+            dots[index].classList.remove('active');
+
+            index = (newIndex + slides.length) % slides.length;
+
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
         }
-    };
+
+        // Next / Prev (desktop)
+        const next = document.querySelector('.slide-nav.next');
+        const prev = document.querySelector('.slide-nav.prev');
+
+        if (next) next.addEventListener('click', () => showSlide(index + 1));
+        if (prev) prev.addEventListener('click', () => showSlide(index - 1));
+
+        // Dot click
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                showSlide(Number(dot.dataset.index));
+            });
+        });
+
+        // TOUCH SUPPORT 👇👇👇
+        const container = document.querySelector('.slides');
+
+        container.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        container.addEventListener('touchmove', (e) => {
+            endX = e.touches[0].clientX;
+        });
+
+        container.addEventListener('touchend', () => {
+            const diff = startX - endX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) showSlide(index + 1);      // deslizar p/ esquerda
+                if (diff < 0) showSlide(index - 1);      // deslizar p/ direita
+            }
+        });
+    }
 
     document.addEventListener('keydown', handleKeyboard);
-    
+
     // Clean up on modal close
     const modal = document.getElementById('project-modal');
     if (modal) {
@@ -392,7 +432,7 @@ function initSlideshow() {
                 }
             });
         });
-        
+
         observer.observe(document.body, { childList: true });
     }
 }
