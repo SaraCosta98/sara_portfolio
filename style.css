@@ -534,15 +534,17 @@ h2 {
 
 .modal-close {
     position: sticky;
-    top: 12px;
-    left: calc(100% - 54px);
-    width: 42px;
-    height: 42px;
+    top: 1vw;
+    left: calc(100% - 5vw);
+    width: 4vw;
+    height: 4vw;
+    min-width: 23px;  /* tamanho mínimo para mobile */
+    min-height: 23px;
     border-radius: 50%;
     border: 2px solid #000;
     background-color: #EF2F95;
     color: #fff;
-    font-size: 1.8rem;
+    font-size: 2vw;
     font-weight: 700;
     cursor: pointer;
     display: flex;
@@ -551,7 +553,7 @@ h2 {
     z-index: 10;
     transition: all 0.3s ease;
     margin-left: auto;
-    margin-right: 12px;
+    margin-right: 1vw;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -837,7 +839,6 @@ a:focus-visible {
     position: relative;
     overflow: hidden;
     border-radius: 12px;
-    min-height: 250px;
 }
 
 .slide {
@@ -850,6 +851,9 @@ a:focus-visible {
 }
 
 .slide img {
+    
+    
+    height: auto;          
     width: 70%;
     max-height: 400px;
     object-fit: scale-down;
