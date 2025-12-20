@@ -865,7 +865,7 @@ a:focus-visible {
 
 /* Slide de informações */
 .slide-info {
-    padding: 0px 50px 0px 50px;
+    padding: 0px 70px 0px 70px;
     background: #F2F19B;
     border-radius: 12px;
     min-height: 250px;
@@ -938,6 +938,14 @@ a:focus-visible {
     background: #EF2F95;
     box-shadow: 0 3px 8px rgba(239, 47, 149, 0.5);
 }
+
+.slide-info {
+    background: #F2F19B;
+    border-radius: 12px;
+    min-height: 250px;
+    min-width: 300px;
+}
+
 
 /* Dots - ESTILO COLORIDO */
 .slide-dots {
