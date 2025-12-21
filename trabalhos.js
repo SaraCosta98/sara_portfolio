@@ -1,12 +1,15 @@
 /**
- * trabalhos.js - Fetches and displays work/projects with filters and swipe support
+ * trabalhos.js - Fetches and displays work/projects with filters
  */
 
 const urlw = "https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780-938e-11ee-bad3-c399e8060022/objects/659c83116e0560e7c192753a?read_key=7C8tqJzO9S1KnNTyo7v5vs5kHvk9eoUBUpOlEkGFqEzwGodRBj&depth=1&props=slug,title,metadata,";
 
-let allProjects = [];
-let currentFilter = 'todos';
+let allProjects = []; // Armazena todos os projetos
+let currentFilter = 'todos'; // Filtro atual
 
+/**
+ * Fetches works/projects from the API
+ */
 function fetchWorks() {
     fetch(urlw)
         .then(response => {
@@ -27,20 +30,26 @@ function fetchWorks() {
         .catch(error => console.error('Fetching error:', error));
 }
 
+/**
+ * Cria os botões de filtro baseados nas categorias únicas
+ */
 function createFilterButtons(projects) {
     const workContainer = document.getElementById('work-container');
     if (!workContainer) return;
 
+    // Extrai categorias únicas
     const filters = [...new Set(projects
         .map(p => p.metadata.category?.filter)
         .filter(Boolean)
     )];
 
+    // Remove o conteúdo antigo da div.blu se existir
     const oldBlu = workContainer.querySelector('.blu');
     if (oldBlu) {
         oldBlu.remove();
     }
 
+    // Cria novo container de filtros
     const filterDiv = document.createElement('div');
     filterDiv.className = 'blu';
 
@@ -48,6 +57,7 @@ function createFilterButtons(projects) {
     filterTitle.textContent = 'Projetos';
     filterDiv.appendChild(filterTitle);
 
+    // Cria container dos botões
     const filterButtons = document.createElement('div');
     filterButtons.className = 'project-filters';
     filterButtons.style.cssText = `
@@ -57,9 +67,11 @@ function createFilterButtons(projects) {
         margin-top: 10px;
     `;
 
+    // Botão "Todos"
     const allButton = createProjectFilterButton('TODOS', 'todos', true);
     filterButtons.appendChild(allButton);
 
+    // Adiciona botões para cada categoria
     filters.forEach(category => {
         const filterName = category?.toUpperCase?.() || category;
         const button = createProjectFilterButton(filterName, category, false);
@@ -67,9 +79,14 @@ function createFilterButtons(projects) {
     });
 
     filterDiv.appendChild(filterButtons);
+
+    // Insere no início do work-container
     workContainer.insertBefore(filterDiv, workContainer.firstChild);
 }
 
+/**
+ * Cria um botão de filtro individual
+ */
 function createProjectFilterButton(label, filterValue, isActive) {
     const button = document.createElement('p');
     button.className = 'projetos filter-project-btn' + (isActive ? ' active' : '');
@@ -88,6 +105,7 @@ function createProjectFilterButton(label, filterValue, isActive) {
         user-select: none;
     `;
 
+    // Hover effects
     button.addEventListener('mouseenter', () => {
         button.style.color = '#EF2F95';
         button.style.transform = 'translateX(5px)';
@@ -100,6 +118,7 @@ function createProjectFilterButton(label, filterValue, isActive) {
         }
     });
 
+    // Click event
     button.addEventListener('click', () => {
         filterProjects(filterValue);
         updateActiveFilterButton(button);
@@ -108,6 +127,9 @@ function createProjectFilterButton(label, filterValue, isActive) {
     return button;
 }
 
+/**
+ * Filtra os projetos baseado na categoria
+ */
 function filterProjects(filterValue) {
     currentFilter = filterValue;
 
@@ -121,6 +143,9 @@ function filterProjects(filterValue) {
     displayWorks(filteredProjects);
 }
 
+/**
+ * Atualiza o botão ativo
+ */
 function updateActiveFilterButton(activeButton) {
     const allButtons = document.querySelectorAll('.filter-project-btn');
 
@@ -133,6 +158,9 @@ function updateActiveFilterButton(activeButton) {
     activeButton.style.color = '#EF2F95';
 }
 
+/**
+ * Displays the works/projects in the container
+ */
 function displayWorks(projects) {
     const workContainer = document.getElementById('work-container');
     if (!workContainer) {
@@ -140,6 +168,7 @@ function displayWorks(projects) {
         return;
     }
 
+    // Remove apenas a lista de projetos antiga, mantém os filtros
     const oldProjectList = workContainer.querySelector('.project-list');
     const oldHeader = workContainer.querySelector('.work-header');
     const oldNoProjects = workContainer.querySelector('.no-projects');
@@ -148,6 +177,7 @@ function displayWorks(projects) {
     if (oldHeader) oldHeader.remove();
     if (oldNoProjects) oldNoProjects.remove();
 
+    // Se não há projetos
     if (projects.length === 0) {
         const noProjectsMsg = document.createElement('div');
         noProjectsMsg.className = 'no-projects';
@@ -162,6 +192,7 @@ function displayWorks(projects) {
         return;
     }
 
+    // Create the project list
     const projectList = document.createElement('ul');
     projectList.className = 'project-list';
 
@@ -171,6 +202,7 @@ function displayWorks(projects) {
         projectItem.style.opacity = '0';
         projectItem.style.animation = `fadeIn 0.5s ease-out ${index * 0.08}s forwards`;
 
+        // Create the project link with number
         const projectLink = document.createElement('a');
         projectLink.className = 'project-link';
         const projectNumber = String(index + 1).padStart(3, '0');
@@ -181,6 +213,7 @@ function displayWorks(projects) {
         `;
         projectLink.href = '#';
 
+        // Create modal popup
         projectLink.addEventListener('click', (event) => {
             event.preventDefault();
             openProjectModal(project);
@@ -193,6 +226,9 @@ function displayWorks(projects) {
     workContainer.appendChild(projectList);
 }
 
+/**
+ * Opens the project modal with details
+ */
 function openProjectModal(project) {
     const existingModal = document.getElementById('project-modal');
     if (existingModal) existingModal.remove();
@@ -201,6 +237,7 @@ function openProjectModal(project) {
     let slidesHTML = '';
     let dotsHTML = '';
 
+    // Primeira página: Informações do projeto
     slidesHTML += `
         <div class="slide active">
             <div class="slide-info">
@@ -217,6 +254,7 @@ function openProjectModal(project) {
     `;
     dotsHTML += `<span class="slide-dot active" data-index="0"></span>`;
 
+    // Páginas seguintes: Imagens
     images.forEach((img, index) => {
         slidesHTML += `
             <div class="slide">
@@ -264,10 +302,6 @@ function openProjectModal(project) {
 
     document.body.appendChild(modal);
 
-    // Prevenir scroll do body
-    document.body.classList.add('modal-open');
-    document.body.style.overflow = 'hidden';
-
     setTimeout(() => {
         modal.classList.add('modal-active');
     }, 10);
@@ -277,15 +311,13 @@ function openProjectModal(project) {
     }
 }
 
+/**
+ * Closes the project modal
+ */
 function closeProjectModal() {
     const modal = document.getElementById('project-modal');
     if (modal) {
         modal.classList.remove('modal-active');
-        
-        // Restaurar scroll do body
-        document.body.classList.remove('modal-open');
-        document.body.style.overflow = '';
-        
         setTimeout(() => {
             modal.remove();
         }, 300);
@@ -293,7 +325,7 @@ function closeProjectModal() {
 }
 
 /**
- * Initialize slideshow with swipe support
+ * Initialize slideshow functionality
  */
 function initSlideshow() {
     let currentSlide = 0;
@@ -301,12 +333,6 @@ function initSlideshow() {
     const dots = document.querySelectorAll('.slide-dot');
     const prevBtn = document.querySelector('.slide-nav.prev');
     const nextBtn = document.querySelector('.slide-nav.next');
-    const slidesContainer = document.querySelector('.slides');
-
-    // Variáveis para swipe
-    let startX = 0;
-    let endX = 0;
-    let isDragging = false;
 
     function showSlide(index) {
         slides.forEach(slide => slide.classList.remove('active'));
@@ -321,26 +347,20 @@ function initSlideshow() {
         currentSlide = index;
     }
 
-    function nextSlide() {
-        const newIndex = (currentSlide + 1) % slides.length;
-        showSlide(newIndex);
-    }
-
-    function prevSlide() {
-        const newIndex = (currentSlide - 1 + slides.length) % slides.length;
-        showSlide(newIndex);
-    }
-
-    // Botões de navegação
     if (prevBtn) {
-        prevBtn.addEventListener('click', prevSlide);
+        prevBtn.addEventListener('click', () => {
+            const newIndex = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(newIndex);
+        });
     }
 
     if (nextBtn) {
-        nextBtn.addEventListener('click', nextSlide);
+        nextBtn.addEventListener('click', () => {
+            const newIndex = (currentSlide + 1) % slides.length;
+            showSlide(newIndex);
+        });
     }
 
-    // Dots
     dots.forEach(dot => {
         dot.addEventListener('click', () => {
             const index = parseInt(dot.dataset.index);
@@ -348,46 +368,14 @@ function initSlideshow() {
         });
     });
 
-    // SWIPE - Touch events
-    if (slidesContainer) {
-        slidesContainer.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            isDragging = true;
-        }, { passive: true });
-
-        slidesContainer.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            endX = e.touches[0].clientX;
-        }, { passive: true });
-
-        slidesContainer.addEventListener('touchend', () => {
-            if (!isDragging) return;
-            
-            const difference = startX - endX;
-            const swipeThreshold = 50; // Mínimo de 50px para considerar swipe
-
-            if (Math.abs(difference) > swipeThreshold) {
-                if (difference > 0) {
-                    // Swipe para esquerda - próximo slide
-                    nextSlide();
-                } else {
-                    // Swipe para direita - slide anterior
-                    prevSlide();
-                }
-            }
-
-            isDragging = false;
-            startX = 0;
-            endX = 0;
-        });
-    }
-
     // Keyboard navigation
     const handleKeyboard = (e) => {
         if (e.key === 'ArrowLeft') {
-            prevSlide();
+            const newIndex = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(newIndex);
         } else if (e.key === 'ArrowRight') {
-            nextSlide();
+            const newIndex = (currentSlide + 1) % slides.length;
+            showSlide(newIndex);
         }
     };
 
