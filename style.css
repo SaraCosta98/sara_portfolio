@@ -34,7 +34,7 @@ body {
     background: #d02883;
 }
 
-/* AnimaÃ§Ãµes suaves */
+/* Animações suaves */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -474,7 +474,7 @@ h2 {
 }
 
 /* =========================
-   MODAL / POPUP - CORRIGIDO
+   MODAL / POPUP
 ========================= */
 
 .modal {
@@ -524,33 +524,39 @@ h2 {
     flex-direction: column;
 }
 
+.modal-content::-webkit-scrollbar {
+    display: none;
+}
+
 .modal-active .modal-content {
     transform: translateY(0) scale(1);
 }
 
-/* Botão de fechar - CORRIGIDO */
 .modal-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
-    min-height: 42px;
+    position: sticky;
+    top: 1vw;
+    left: calc(100% - 5vw);
+    width: 4vw;
+    height: 4vw;
+    min-width: 23px;  /* tamanho mínimo para mobile */
+    min-height: 23px;
+    max-width: 32px;  /* tamanho máximo para desktop */
+    max-height: 32px;
     border-radius: 50%;
     border: 2px solid #000;
     background-color: #EF2F95;
     color: #fff;
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-size: clamp(2vw, 3vw, 3vw);
+    font-weight: 500;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10;
     transition: all 0.3s ease;
+    margin-left: auto;
+    margin-right: 1vw;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
 }
 
 .modal-close:hover {
@@ -560,11 +566,10 @@ h2 {
 }
 
 .modal-body {
-    padding: 60px 32px 36px 32px;
+    padding: 28px 32px 36px 32px;
     font-family: "Swiss 721 Condensed", Arial, sans-serif;
     color: #000;
     overflow-y: auto;
-    overflow-x: hidden;
     flex: 1;
     scrollbar-width: thin;
     scrollbar-color: #EF2F95 #F2F19B;
@@ -598,6 +603,7 @@ h2 {
     margin: 20px 0 24px 0;
     font-size: 1rem;
     line-height: 130%;
+
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -609,6 +615,7 @@ h2 {
     display: block;
     transition: transform 0.3s ease;
 }
+
 
 .modal-body p {
     font-size: 0.95rem;
@@ -624,21 +631,216 @@ h2 {
 }
 
 /* =========================
-   SLIDESHOW - CORRIGIDO
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 1024px) {
+    html {
+        margin: 5px 30px;
+    }
+
+    .main-container {
+        padding-left: 55px;
+    }
+
+    .column {
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 1.2rem;
+    }
+
+    .square {
+        width: 45px;
+        height: 75px;
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    html {
+        margin: 5px 15px;
+    }
+
+    .main-container {
+        padding-left: 0;
+    }
+
+    header {
+        font-size: 1rem;
+    }
+
+    .square {
+        display: none;
+    }
+
+    .column {
+        grid-template-columns: 1fr;
+        grid-gap: 1rem;
+    }
+
+    .filter-container {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .modal-content {
+        width: 90%;
+        max-width: none;
+    }
+
+    .modal-body {
+        padding: 22px 20px 28px 20px;
+    }
+
+    .modal-body h2 {
+        font-size: 1.8rem;
+    }
+
+    .modal-sinopse {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        margin: 5px 10px;
+    }
+
+    header {
+        font-size: 0.9rem;
+        padding-top: 3px;
+        padding-bottom: 8px;
+    }
+
+    .modal-body h2 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 0.875rem;
+    }
+}
+
+/* =========================
+   FILTER BUTTONS
+========================= */
+
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(191, 234, 250, 0.2);
+    border-radius: 10px;
+    border: 2px solid #BFEAFA;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 2px solid #000;
+    border-radius: 8px;
+    background: #fff;
+    color: #000;
+    font-family: "Swiss 721 Condensed", Arial, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #BFEAFA;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.filter-btn.active {
+    background: #EF2F95;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(239, 47, 149, 0.3);
+}
+
+.filter-btn:focus-visible {
+    outline: 3px solid #4BC1DB;
+    outline-offset: 2px;
+}
+
+.no-posts {
+    padding: 40px 20px;
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* =========================
+   SMOOTH ANIMATIONS
+========================= */
+
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.post,
+.object,
+.extra {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+* {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =========================
+   ACCESSIBILITY FOCUS
+========================= */
+
+*:focus-visible {
+    outline: 3px solid #EF2F95;
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 3px solid #4BC1DB;
+    outline-offset: 3px;
+}
+
+.modal-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* =========================
+   SLIDESHOW IMAGES - NOVO ESTILO
 ========================= */
 
 .slideshow {
     position: relative;
-    margin: 0;
+    margin: 20px 0;
     width: 100%;
-    overflow: hidden;
 }
 
 .slides {
     position: relative;
     overflow: hidden;
     border-radius: 12px;
-    touch-action: pan-y pinch-zoom;
 }
 
 .slide {
@@ -651,11 +853,10 @@ h2 {
 }
 
 .slide img {
-    height: auto;
-    width: 100%;
-    max-width: 70%;
+    height: auto;          
+    width: 70%;
     max-height: 400px;
-    object-fit: contain;
+    object-fit: scale-down;
     border: 3px solid #000;
     border-radius: 12px;
     display: block;
@@ -664,16 +865,15 @@ h2 {
 
 /* Slide de informações */
 .slide-info {
-    padding: clamp(16px, 3vw, 32px);
+    padding: 0px 70px 0px 70px;
     background: #F2F19B;
     border-radius: 12px;
     min-height: 250px;
-    width: 100%;
-    box-sizing: border-box;
+    min-width: 300px;
 }
 
 .slide-info h2 {
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-size: 2.2rem;
     margin-bottom: 12px;
     font-weight: 700;
     line-height: 110%;
@@ -691,7 +891,7 @@ h2 {
 }
 
 .slide-info p {
-    font-size: clamp(0.85rem, 2vw, 0.95rem);
+    font-size: 0.95rem;
     line-height: 145%;
     margin-bottom: 14px;
 }
@@ -703,7 +903,7 @@ h2 {
     color: #EF2F95;
 }
 
-/* Navigation arrows */
+/* Navigation arrows - ESTILO COLORIDO */
 .slide-nav {
     position: absolute;
     top: 50%;
@@ -712,19 +912,26 @@ h2 {
     color: white;
     border: none;
     font-size: 2rem;
-    padding: 8px 16px;
+    padding: 4px 12px;
     cursor: pointer;
     border-radius: 6px;
     z-index: 5;
     transition: all 0.3s ease;
+
+}
+
+@media (max-width: 768px) {
+    .slide-nav {
+        display: none !important;
+    }
 }
 
 .slide-nav.prev {
-    left: 10px;
+    left: 5px;
 }
 
 .slide-nav.next {
-    right: 10px;
+    right: 0px;
 }
 
 .slide-nav:hover {
@@ -732,13 +939,20 @@ h2 {
     box-shadow: 0 3px 8px rgba(239, 47, 149, 0.5);
 }
 
-/* Dots */
+.slide-info {
+    background: #F2F19B;
+    border-radius: 12px;
+    min-height: 250px;
+    min-width: 300px;
+}
+
+
+/* Dots - ESTILO COLORIDO */
 .slide-dots {
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin-top: 16px;
-    padding-bottom: 8px;
+    margin-top: 12px;
 }
 
 .slide-dot {
@@ -753,102 +967,4 @@ h2 {
 .slide-dot.active {
     background: #EF2F95;
     transform: scale(1.2);
-}
-
-/* =========================
-   RESPONSIVIDADE MOBILE
-========================= */
-
-@media (max-width: 768px) {
-    .modal-content {
-        width: 95%;
-        max-height: 90vh;
-        border-radius: 12px;
-    }
-
-    .modal-close {
-        top: 8px;
-        right: 8px;
-        width: 36px;
-        height: 36px;
-        min-width: 36px;
-        min-height: 36px;
-        font-size: 1.5rem;
-    }
-
-    .modal-body {
-        padding: 50px 20px 28px 20px;
-    }
-
-    .modal-body h2 {
-        font-size: 1.8rem;
-    }
-
-    .modal-sinopse {
-        font-size: 0.95rem;
-        padding: 14px 16px;
-    }
-
-    .slide img {
-        max-width: 90%;
-        max-height: 300px;
-    }
-
-    .slide-info {
-        padding: 20px 16px;
-    }
-
-    /* Esconder setas no mobile */
-    .slide-nav {
-        display: none;
-    }
-
-    .slide-dots {
-        margin-top: 12px;
-    }
-}
-
-@media (max-width: 480px) {
-    .modal-content {
-        width: 98%;
-        border-radius: 10px;
-    }
-
-    .modal-close {
-        width: 32px;
-        height: 32px;
-        min-width: 32px;
-        min-height: 32px;
-        font-size: 1.3rem;
-        top: 6px;
-        right: 6px;
-    }
-
-    .modal-body {
-        padding: 45px 16px 24px 16px;
-    }
-
-    .modal-body h2 {
-        font-size: 1.5rem;
-    }
-
-    .slide-info {
-        padding: 16px 12px;
-        min-height: 200px;
-    }
-
-    .slide img {
-        max-width: 95%;
-        max-height: 250px;
-    }
-
-    .slide-dot {
-        width: 8px;
-        height: 8px;
-    }
-}
-
-/* Prevenir scroll horizontal no body quando modal aberto */
-body.modal-open {
-    overflow: hidden;
 }
