@@ -264,6 +264,10 @@ function openProjectModal(project) {
 
     document.body.appendChild(modal);
 
+    // Prevenir scroll do body
+    document.body.classList.add('modal-open');
+    document.body.style.overflow = 'hidden';
+
     setTimeout(() => {
         modal.classList.add('modal-active');
     }, 10);
@@ -277,6 +281,11 @@ function closeProjectModal() {
     const modal = document.getElementById('project-modal');
     if (modal) {
         modal.classList.remove('modal-active');
+        
+        // Restaurar scroll do body
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        
         setTimeout(() => {
             modal.remove();
         }, 300);
