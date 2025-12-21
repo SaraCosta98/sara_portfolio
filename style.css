@@ -536,8 +536,8 @@ h2 {
     position: sticky;
     top: 1vw;
     left: 1vw;
-    width: 4vw;
-    height: 4vw;
+    width: 1.5vw;
+    height: 1.5vw;
     min-width: 23px;  /* tamanho mínimo para mobile */
     min-height: 23px;
     max-width: 32px;  /* tamanho máximo para desktop */
@@ -920,7 +920,7 @@ a:focus-visible {
 
 }
 
-@media (max-width: 500px) {
+@media (max-width: 768px) {
     .slide-nav {
         display: none !important;
     }
