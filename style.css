@@ -535,7 +535,7 @@ h2 {
 .modal-close {
     position: sticky;
     top: 1vw;
-    left: calc(100% - 5vw);
+    left: 1vw;
     width: 4vw;
     height: 4vw;
     min-width: 23px;  /* tamanho mínimo para mobile */
@@ -920,7 +920,7 @@ a:focus-visible {
 
 }
 
-@media (max-width: 768px) {
+@media (max-width: 500px) {
     .slide-nav {
         display: none !important;
     }
@@ -940,6 +940,7 @@ a:focus-visible {
 }
 
 .slide-info {
+    padding: 0px;;
     background: #F2F19B;
     border-radius: 12px;
     min-height: 250px;
@@ -967,4 +968,8 @@ a:focus-visible {
 .slide-dot.active {
     background: #EF2F95;
     transform: scale(1.2);
+}
+
+body.modal-open {
+    overflow: hidden;
 }
