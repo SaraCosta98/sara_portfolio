@@ -6,6 +6,7 @@ const urlw = "https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780
 
 let allProjects = []; // Armazena todos os projetos
 let currentFilter = 'todos'; // Filtro atual
+let scrollPosition = 0; // Guarda a posição do scroll
 
 /**
  * Fetches works/projects from the API
@@ -227,6 +228,30 @@ function displayWorks(projects) {
 }
 
 /**
+ * Block body scroll
+ */
+function blockBodyScroll() {
+    scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollPosition}px`;
+    document.body.style.width = '100%';
+    document.documentElement.style.overflow = 'hidden';
+}
+
+/**
+ * Restore body scroll
+ */
+function restoreBodyScroll() {
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('position');
+    document.body.style.removeProperty('top');
+    document.body.style.removeProperty('width');
+    document.documentElement.style.removeProperty('overflow');
+    window.scrollTo(0, scrollPosition);
+}
+
+/**
  * Opens the project modal with details
  */
 function openProjectModal(project) {
@@ -280,9 +305,9 @@ function openProjectModal(project) {
     modal.className = 'modal';
 
     modal.innerHTML = `
-        <div class="modal-overlay" onclick="closeProjectModal()"></div>
+        <div class="modal-overlay"></div>
         <div class="modal-content">
-            <button class="modal-close" onclick="closeProjectModal()">×</button>
+            <button class="modal-close">×</button>
 
             <div class="modal-body">
                 <div class="slideshow">
@@ -302,6 +327,27 @@ function openProjectModal(project) {
 
     document.body.appendChild(modal);
 
+    // Block body scroll
+    blockBodyScroll();
+
+    // Event listeners para fechar
+    const overlay = modal.querySelector('.modal-overlay');
+    const closeBtn = modal.querySelector('.modal-close');
+    
+    overlay.addEventListener('click', closeProjectModal);
+    closeBtn.addEventListener('click', closeProjectModal);
+
+    // Prevenir propagação de eventos no modal-content
+    const modalContent = modal.querySelector('.modal-content');
+    modalContent.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
+    // Prevenir scroll touch no overlay
+    overlay.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+    }, { passive: false });
+
     setTimeout(() => {
         modal.classList.add('modal-active');
     }, 10);
@@ -318,8 +364,11 @@ function closeProjectModal() {
     const modal = document.getElementById('project-modal');
     if (modal) {
         modal.classList.remove('modal-active');
+        
         setTimeout(() => {
             modal.remove();
+            // Restore body scroll
+            restoreBodyScroll();
         }, 300);
     }
 }
@@ -333,6 +382,13 @@ function initSlideshow() {
     const dots = document.querySelectorAll('.slide-dot');
     const prevBtn = document.querySelector('.slide-nav.prev');
     const nextBtn = document.querySelector('.slide-nav.next');
+    const slidesContainer = document.querySelector('.slides');
+
+    // Touch/Swipe variables
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
 
     function showSlide(index) {
         slides.forEach(slide => slide.classList.remove('active'));
@@ -367,6 +423,39 @@ function initSlideshow() {
             showSlide(index);
         });
     });
+
+    // Touch/Swipe functionality
+    if (slidesContainer) {
+        slidesContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        slidesContainer.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, { passive: true });
+    }
+
+    function handleSwipe() {
+        const swipeThreshold = 50; // minimum distance for swipe
+        const horizontalDiff = touchStartX - touchEndX;
+        const verticalDiff = Math.abs(touchStartY - touchEndY);
+
+        // Only trigger if horizontal swipe is dominant
+        if (verticalDiff < swipeThreshold && Math.abs(horizontalDiff) > swipeThreshold) {
+            if (horizontalDiff > 0) {
+                // Swipe left - next slide
+                const newIndex = (currentSlide + 1) % slides.length;
+                showSlide(newIndex);
+            } else {
+                // Swipe right - previous slide
+                const newIndex = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(newIndex);
+            }
+        }
+    }
 
     // Keyboard navigation
     const handleKeyboard = (e) => {
