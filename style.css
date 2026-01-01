@@ -693,10 +693,6 @@ h2 {
         max-width: none;
     }
 
-    .modal-body {
-        padding: 22px 20px 28px 20px;
-    }
-
     .modal-body h2 {
         font-size: 1.8rem;
     }
@@ -923,7 +919,7 @@ a:focus-visible {
 
 @media (max-width: 768px) {
     .slideshow {
-        padding: 5px 20px 5px 20px;
+        padding: 5px 10px 5px 10px;
 
     }
 
@@ -947,7 +943,6 @@ a:focus-visible {
 
 .slide-info {
     padding: 0px;
-    ;
     background: #F2F19B;
     border-radius: 12px;
     min-height: 250px;
