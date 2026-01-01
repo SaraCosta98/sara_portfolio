@@ -538,15 +538,17 @@ h2 {
     left: 1vw;
     width: 1.5vw;
     height: 1.5vw;
-    min-width: 23px;  /* tamanho mínimo para mobile */
+    min-width: 23px;
+    /* tamanho mínimo para mobile */
     min-height: 23px;
-    max-width: 32px;  /* tamanho máximo para desktop */
+    max-width: 32px;
+    /* tamanho máximo para desktop */
     max-height: 32px;
     border-radius: 50%;
     border: 2px solid #000;
     background-color: #EF2F95;
     color: #fff;
-    font-size: clamp(2vw, 3vw, 3vw);
+    font-size: clamp(2vw, 1vw, 1vw);
     font-weight: 500;
     cursor: pointer;
     display: flex;
@@ -566,7 +568,6 @@ h2 {
 }
 
 .modal-body {
-    padding: 28px 32px 36px 32px;
     font-family: "Swiss 721 Condensed", Arial, sans-serif;
     color: #000;
     overflow-y: auto;
@@ -833,8 +834,8 @@ a:focus-visible {
 
 .slideshow {
     position: relative;
+    padding: 20px 80px 20px 80px;
     margin: 20px 0;
-    width: 100%;
 }
 
 .slides {
@@ -853,7 +854,7 @@ a:focus-visible {
 }
 
 .slide img {
-    height: auto;          
+    height: auto;
     width: 70%;
     max-height: 400px;
     object-fit: scale-down;
@@ -921,17 +922,22 @@ a:focus-visible {
 }
 
 @media (max-width: 768px) {
+    .slideshow {
+        padding: 5px 20px 5px 20px;
+
+    }
+
     .slide-nav {
         display: none !important;
     }
 }
 
 .slide-nav.prev {
-    left: 5px;
+    left: 10px;
 }
 
 .slide-nav.next {
-    right: 0px;
+    right: 10px;
 }
 
 .slide-nav:hover {
@@ -940,7 +946,8 @@ a:focus-visible {
 }
 
 .slide-info {
-    padding: 0px;;
+    padding: 0px;
+    ;
     background: #F2F19B;
     border-radius: 12px;
     min-height: 250px;
