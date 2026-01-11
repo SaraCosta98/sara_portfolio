@@ -1,4 +1,4 @@
-const url ="https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780-938e-11ee-bad3-c399e8060022/objects?pretty=true&query=%7B%22type%22:%22project1s%22%7D&limit=10&skip=0&read_key=7C8tqJzO9S1KnNTyo7v5vs5kHvk9eoUBUpOlEkGFqEzwGodRBj&depth=1&sort=created_at&props=slug,title,metadata,";
+const url = "https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780-938e-11ee-bad3-c399e8060022/objects?pretty=true&query=%7B%22type%22:%22project1s%22%7D&limit=10&skip=0&read_key=7C8tqJzO9S1KnNTyo7v5vs5kHvk9eoUBUpOlEkGFqEzwGodRBj&depth=1&sort=created_at&props=slug,title,metadata";
 
 // Function to fetch posts
 function fetchPosts() {
@@ -15,7 +15,6 @@ function fetchPosts() {
         .catch(error => console.error('Fetching error:', error));
 }
 
-
 // Function to display posts
 function displayPosts(posts) {
     const postsContainer = document.getElementById('posts-container');
@@ -29,17 +28,23 @@ function displayPosts(posts) {
         postElement.className = 'post';
 
         // Check if the post object has required properties
-        if (post.slug && post.title && post.metadata && post.metadata.sinopse && post.metadata.image && post.metadata.description && post.metadata.date) {
-            const imageUrl = post.metadata.image.url; // Get the image URL
+        if (post.slug && post.title && post.metadata) {
+            const imageUrl = post.metadata.image?.url || ''; // Get the image URL safely
+            const sinopse = post.metadata.sinopse || '';
+            const description = post.metadata.description || '';
+            const date = post.metadata.date || '';
+            
+            // Get category name (filter title)
+            const categoryName = post.metadata.category?.filter || 'Trabalhos';
 
             // Construct HTML for displaying the post information
             postElement.innerHTML = `
-                <h3>Trabalhos</h3>
+                <h3>${categoryName}</h3>
                 <h2>${post.title}</h2>
-                <p>${post.metadata.sinopse}</p>
-                <img src="${imageUrl}" alt="${post.title} Image">
-                <p>${post.metadata.description}</p>
-                <p>Date: ${post.metadata.date}</p>
+                ${sinopse ? `<p>${sinopse}</p>` : ''}
+                ${imageUrl ? `<img src="${imageUrl}" alt="${post.title} Image">` : ''}
+                ${description ? `<p>${description}</p>` : ''}
+                ${date ? `<p id="date">Date: ${date}</p>` : ''}
             `;
             postsContainer.appendChild(postElement);
         } else {
@@ -50,3 +55,42 @@ function displayPosts(posts) {
 
 // Call the function to fetch posts
 fetchPosts();
+
+// Animação da capa
+const sentence1 = "Olá! Eu sou a Sara. Designer e Multimédia.";
+const sentence2 = "Take a look at my work!";
+
+let i = 0;
+
+function writeSentence1() {
+    if (i < sentence1.length) {
+        document.getElementById("sentence1").innerHTML += sentence1.charAt(i);
+        i++;
+        setTimeout(writeSentence1, 50);
+    } else {
+        i = 0;
+        setTimeout(writeSentence2, 1000);
+    }
+}
+
+function writeSentence2() {
+    if (i < sentence2.length) {
+        document.getElementById("sentence2").innerHTML += sentence2.charAt(i);
+        i++;
+        setTimeout(writeSentence2, 50);
+    }
+}
+
+writeSentence1();
+
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        document.getElementById("capa").classList.add("virar");
+
+        // libertar scroll depois da animação
+        setTimeout(() => {
+            document.body.style.overflow = "auto";
+        }, 1400);
+
+    }, 5000);
+});
