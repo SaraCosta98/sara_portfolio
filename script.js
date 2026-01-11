@@ -1,4 +1,4 @@
-const url = "https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780-938e-11ee-bad3-c399e8060022/objects?pretty=true&query=%7B%22type%22:%22project1s%22%7D&limit=10&skip=0&read_key=7C8tqJzO9S1KnNTyo7v5vs5kHvk9eoUBUpOlEkGFqEzwGodRBj&depth=1&sort=created_at&props=slug,title,metadata";
+const url = "https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780-938e-11ee-bad3-c399e8060022/objects?pretty=true&query=%7B%22type%22:%22project1s%22%7D&limit=10&skip=0&read_key=7C8tqJzO9S1KnNTyo7v5vs5kHvk9eoUBUpOlEkGFqEzwGodRBj&depth=1&props=slug,title,metadata";
 
 // Function to fetch posts
 function fetchPosts() {
@@ -94,3 +94,4 @@ window.addEventListener("load", () => {
 
     }, 5000);
 });
+
