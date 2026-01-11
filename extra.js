@@ -32,25 +32,25 @@ function displayExtra(extra) {
         extra.metadata &&
         extra.metadata.about_me &&
         extra.metadata.text_about &&
+        extra.metadata.competencias &&
         extra.metadata.curiosity &&
         extra.metadata.image &&
-        extra.metadata.image.url &&
-        extra.metadata.gif && 
-        extra.metadata.gif.url  
+        extra.metadata.image.url
     ) {
         const aboutMeText = extra.metadata.about_me;
         const textAbout = extra.metadata.text_about;
+        const competencias = extra.metadata.competencias;
         const curiosity = extra.metadata.curiosity;
         const imageUrl = extra.metadata.image.url;
-        const gifUrl = extra.metadata.gif.url;
+
 
         // Construct HTML for displaying the object information
         extraElement.innerHTML = `
         <img src="${imageUrl}" alt="Image">
-            <p>${aboutMeText}</p>
+            <h3>${aboutMeText}</h3>
             <p>${textAbout}</p>
+            <h3>${competencias}</h3>
             <p>${curiosity}</p>
-            <img src="${gifUrl}" alt="GIF">
         `;
         extraContainer.appendChild(extraElement);
     } else {
