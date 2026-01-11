@@ -232,11 +232,27 @@ function displayWorks(projects) {
  */
 function blockBodyScroll() {
     scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Guarda a largura atual antes de bloquear (para compensar scrollbar)
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollPosition}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.width = '100%';
+
+    // Compensa a scrollbar para evitar "jump"
+    if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
     document.documentElement.style.overflow = 'hidden';
+
+    // Para iOS/Safari
+    document.body.style.height = '100%';
+    document.documentElement.style.height = '100%';
 }
 
 /**
@@ -246,8 +262,14 @@ function restoreBodyScroll() {
     document.body.style.removeProperty('overflow');
     document.body.style.removeProperty('position');
     document.body.style.removeProperty('top');
+    document.body.style.removeProperty('left');
+    document.body.style.removeProperty('right');
     document.body.style.removeProperty('width');
+    document.body.style.removeProperty('padding-right');
+    document.body.style.removeProperty('height');
     document.documentElement.style.removeProperty('overflow');
+    document.documentElement.style.removeProperty('height');
+
     window.scrollTo(0, scrollPosition);
 }
 
@@ -267,13 +289,17 @@ function openProjectModal(project) {
         <div class="slide active">
             <div class="slide-info">
                 <h2>${project.title}</h2>
+                 <p class="modal-date">
+                    <strong>Data:</strong> ${project.metadata.date || ''}
+                </p>
+                
                 <div class="modal-sinopse">
+                    <h1>Ferramentas</h1>
                     ${project.metadata.sinopse || ''}
                 </div>
                 <p>${project.metadata.description || ''}</p>
-                <p class="modal-date">
-                    <strong>Data:</strong> ${project.metadata.date || ''}
-                </p>
+
+
             </div>
         </div>
     `;
@@ -333,7 +359,7 @@ function openProjectModal(project) {
     // Event listeners para fechar
     const overlay = modal.querySelector('.modal-overlay');
     const closeBtn = modal.querySelector('.modal-close');
-    
+
     overlay.addEventListener('click', closeProjectModal);
     closeBtn.addEventListener('click', closeProjectModal);
 
@@ -364,7 +390,7 @@ function closeProjectModal() {
     const modal = document.getElementById('project-modal');
     if (modal) {
         modal.classList.remove('modal-active');
-        
+
         setTimeout(() => {
             modal.remove();
             // Restore body scroll
@@ -393,7 +419,7 @@ function initSlideshow() {
     function showSlide(index) {
         slides.forEach(slide => slide.classList.remove('active'));
         dots.forEach(dot => dot.classList.remove('active'));
-        
+
         if (slides[index]) {
             slides[index].classList.add('active');
         }
@@ -469,7 +495,7 @@ function initSlideshow() {
     };
 
     document.addEventListener('keydown', handleKeyboard);
-    
+
     // Clean up on modal close
     const modal = document.getElementById('project-modal');
     if (modal) {
@@ -481,7 +507,7 @@ function initSlideshow() {
                 }
             });
         });
-        
+
         observer.observe(document.body, { childList: true });
     }
 }
