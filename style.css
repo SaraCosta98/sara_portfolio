@@ -557,12 +557,6 @@ h2 {
     left: 1vw;
     width: 1.5vw;
     height: 1.5vw;
-    min-width: 23px;
-    /* tamanho mínimo para mobile */
-    min-height: 23px;
-    max-width: 23px;
-    /* tamanho máximo para desktop */
-    max-height: 32px;
     border-radius: 50%;
     border: 2px solid #000;
     background-color: #EF2F95;
@@ -625,7 +619,7 @@ h1{
 .slide img {
     height: auto;
     width: auto;
-    max-width: 400px;
+    max-width: 300px;
     max-height: 400px;
     object-fit: scale-down;
     border: 3px solid #000;
@@ -1007,5 +1001,6 @@ footer a {
 footer a:hover {
   color: #EF2F95;
 }
+
 
 
