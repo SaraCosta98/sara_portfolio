@@ -15,6 +15,61 @@ body {
     overflow-y: auto;
 }
 
+/* CONTEUDO DA PAGINA INICIAL*/
+
+/* Conteúdo real */
+#conteudo {
+    opacity: 1;
+}
+
+/* Capa */
+#capa {
+    position: fixed;
+    inset: 0;
+    background: #f3f3a1;
+    z-index: 999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform-origin: left;
+    transform-style: preserve-3d;
+    transition: transform 1.4s ease-in-out;
+    box-shadow: inset -2px 0 0 rgba(0, 0, 0, .2);
+    width: 73vw;
+
+}
+
+/* animação */
+
+#capa.virar {
+    transform: perspective(1800px) rotateY(-180deg);
+}
+
+#h1d {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 700;
+    color: #000;
+    line-height: 1.1;
+    text-align: left;
+    margin: 0 0 4% 3%;
+}
+
+#sentence1,
+#sentence2 {
+    display: flex;
+    font-family: "Swiss 721 Condensed", Arial, sans-serif;
+    font-style: normal;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    line-height: 1;
+    font-weight: 700;
+    /* or 279px */
+    color: #EF2F95;
+    text-align: left;
+    margin-left: 3%;
+}
+
 /* Scrollbar customizada */
 ::-webkit-scrollbar {
     width: 12px;
@@ -84,7 +139,7 @@ header {
     padding-top: 5px;
     padding-bottom: 10px;
     top: 0;
-    z-index: 999;
+    z-index: 900;
     position: sticky;
 
     background-color: #F2F19B;
@@ -126,7 +181,6 @@ div.headerlang span {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(auto);
     grid-auto-rows: minmax(1fr, auto);
-
     animation: fadeIn 0.6s ease-out;
 }
 
@@ -136,6 +190,8 @@ div.headerlang span {
 .posts-container {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: visible;
+    border-radius: 3px;
+    padding: 10px;
 }
 
 .object-container:hover,
@@ -160,7 +216,7 @@ div.headerlang span {
 
 @media (min-width: 769px) {
     .posts-container {
-        height: 100vh;
+        height: 120vh;
         overflow-y: auto;
         overflow-x: visible;
     }
@@ -168,7 +224,6 @@ div.headerlang span {
 
 .posts-container {
     position: relative;
-    min-height: 100vh;
     -webkit-transition: transform 2s;
     -o-transition: transform 2s;
     transition: transform 2s;
@@ -176,74 +231,38 @@ div.headerlang span {
     padding: 10px;
 }
 
-.posts-container p {
-    color: #000;
-    text-align: justify;
-    font-family: "Swiss 721 Condensed", Arial, sans-serif;
-    font-size: 0.9375rem;
-    font-style: normal;
-    line-height: 100%;
-    margin: 10px 0px 10px 0px;
-}
-
-.post img {
-    margin: 15px auto;
+.post img, 
+.object img, 
+.extra img {
+    margin: 6px auto;
     width: 95%;
     max-width: 100%;
     height: auto;
     border: 3px solid black;
     border-radius: 10px;
-
-
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-}
-
-.post img:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-}
-
-.object img {
-    margin: 15px auto;
-    width: 95%;
-    max-width: 100%;
-    height: auto;
-    border: 3px solid black;
-    border-radius: 10px;
-
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     position: relative;
     z-index: 1;
 }
 
-.object img:hover {
+.post img:hover, 
+.object img:hover, 
+.extra img:hover {
     transform: scale(1.02);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     z-index: 10;
 }
 
 .extra img {
-    margin: 15px auto 10px auto;
-    width: 95%;
-    max-width: 100%;
-    height: auto;
-    border: 3px solid black;
-    border-radius: 10px;
-
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
+    margin-top: 0px;
 }
 
-.extra img:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    z-index: 10;
+a{
+    text-decoration: none;
+    color: #3aa8c4;
+    text-align: justify;
+    font-family: "Swiss 721 Condensed", Arial, sans-serif;
 }
 
 p {
@@ -252,8 +271,8 @@ p {
     font-family: "Swiss 721 Condensed", Arial, sans-serif;
     font-size: 0.9375rem;
     font-style: normal;
-    line-height: 100%;
-    margin: 0;
+    line-height: 120%;
+    margin: 10px 0;
 }
 
 h3 {
@@ -272,7 +291,7 @@ h3 {
     font-family: "Swiss 721 Condensed", Arial, sans-serif;
     font-size: 1rem;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 800;
     line-height: normal;
 
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -310,7 +329,7 @@ p.projetos {
     font-family: "Swiss 721 Condensed", Arial, sans-serif;
     font-size: 0.875rem;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 800;
     line-height: normal;
 
     transition: color 0.3s ease, transform 0.2s ease;
@@ -385,7 +404,7 @@ h2 {
     cursor: pointer;
     transition: color 0.2s ease;
 
-    padding: 8px 5px;
+    padding: 5px 5px;
     border-radius: 5px;
     transition: all 0.3s ease;
 }
@@ -548,7 +567,7 @@ h2 {
     border: 2px solid #000;
     background-color: #EF2F95;
     color: #fff;
-    font-size: clamp(2vw, 1vw, 1vw);
+    /*font-size: clamp(2vw, 1vw, 1vw);*/
     font-weight: 500;
     cursor: pointer;
     display: flex;
@@ -596,27 +615,24 @@ h2 {
     line-height: 110%;
 }
 
-.modal-sinopse {
-    background-color: #BFEAFA;
-    border: 2px solid #000;
-    border-radius: 8px;
-    padding: 16px 18px;
-    margin: 20px 0 24px 0;
-    font-size: 1rem;
-    line-height: 130%;
-
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+h1{
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    font-weight: 700;
+    text-align: center;
 }
 
-.modal-body img {
-    width: 100%;
+.slide img {
+    height: auto;
+    width: auto;
+    max-width: 400px;
+    max-height: 400px;
+    object-fit: scale-down;
     border: 3px solid #000;
     border-radius: 12px;
-    margin: 0 0 22px 0;
     display: block;
-    transition: transform 0.3s ease;
+    margin: 0 auto;
 }
-
 
 .modal-body p {
     font-size: 0.95rem;
@@ -624,7 +640,7 @@ h2 {
     margin-bottom: 14px;
 }
 
-.modal-date {
+.modal-date, #date {
     margin-top: 22px;
     font-size: 0.9rem;
     font-weight: 700;
@@ -852,17 +868,6 @@ a:focus-visible {
     display: block;
 }
 
-.slide img {
-    height: auto;
-    width: 70%;
-    max-height: 400px;
-    object-fit: scale-down;
-    border: 3px solid #000;
-    border-radius: 12px;
-    display: block;
-    margin: 0 auto;
-}
-
 /* Slide de informações */
 .slide-info {
     padding: 0px 70px 0px 70px;
@@ -879,15 +884,16 @@ a:focus-visible {
     line-height: 110%;
 }
 
-.slide-info .modal-sinopse {
+.modal-sinopse {
     background-color: #BFEAFA;
     border: 2px solid #000;
     border-radius: 8px;
-    padding: 16px 18px;
+    padding: 0 0 10px 0px;
     margin: 20px 0 24px 0;
-    font-size: 1rem;
+    font-size: 0.9rem;
     line-height: 130%;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
 .slide-info p {
@@ -982,3 +988,23 @@ body.modal-open {
     width: 100%;
     height: 100%;
 }
+
+footer {
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.875rem;
+    color: #000;
+    font-family: "Swiss 721 Condensed", Arial, sans-serif;
+}
+
+footer a {
+  color: black; 
+  font-size: 1rem;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+footer a:hover {
+  color: #EF2F95;
+}
+
