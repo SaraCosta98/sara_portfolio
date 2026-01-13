@@ -305,24 +305,50 @@ function openProjectModal(project) {
     `;
     dotsHTML += `<span class="slide-dot active" data-index="0"></span>`;
 
-    // Páginas seguintes: Imagens
-    images.forEach((img, index) => {
+ // Páginas seguintes: Imagens e Vídeos
+const videoMapping = {
+    'Sara_Costa_Video.mp4': 'https://www.youtube.com/embed/z-QUMUwjGXQ',
+};
+
+images.forEach((img, index) => {
+    const fileName = img.url.split('/').pop();
+    const isVideo = fileName.match(/\.(mp4|webm|mov)$/i);
+
+    if (isVideo && videoMapping[fileName]) {
+        const newVideoUrl = videoMapping[fileName];
+
+        // Se for Vimeo/YouTube use iframe
+        if (newVideoUrl.includes('vimeo') || newVideoUrl.includes('youtube') || newVideoUrl.includes('youtu.be')) {
+            slidesHTML += `
+                <div class="slide">
+                    <iframe 
+                        src="${newVideoUrl}" 
+                        style="width: 100%; height: 60vh; border: 3px solid #000; border-radius: 12px;"
+                        allowfullscreen
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    ></iframe>
+                </div>
+            `;
+        } else {
+            slidesHTML += `
+                <div class="slide">
+                    <video controls preload="metadata" playsinline>
+                        <source src="${newVideoUrl}" type="video/mp4">
+                    </video>
+                </div>
+            `;
+        }
+    } else {
+        // Imagem normal
         slidesHTML += `
             <div class="slide">
-                <img 
-                    src="${img.url}" 
-                    alt="${img.alt_text || project.title}"
-                >
+                <img src="${img.url}" alt="${img.alt_text || project.title}">
             </div>
         `;
+    }
 
-        dotsHTML += `
-            <span 
-                class="slide-dot" 
-                data-index="${index + 1}"
-            ></span>
-        `;
-    });
+    dotsHTML += `<span class="slide-dot" data-index="${index + 1}"></span>`;
+});
 
     const totalSlides = 1 + images.length;
 
@@ -520,3 +546,4 @@ document.addEventListener('keydown', (e) => {
 });
 
 fetchWorks();
+
