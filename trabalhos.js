@@ -4,13 +4,49 @@
 
 const urlw = "https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780-938e-11ee-bad3-c399e8060022/objects/659c83116e0560e7c192753a?read_key=7C8tqJzO9S1KnNTyo7v5vs5kHvk9eoUBUpOlEkGFqEzwGodRBj&depth=1&props=slug,title,metadata,";
 
-let allProjects = []; // Armazena todos os projetos
-let currentFilter = 'todos'; // Filtro atual
-let scrollPosition = 0; // Guarda a posição do scroll
+let allProjects = [];
+let currentFilter = 'todos';
+let scrollPosition = 0;
+
+// MAPEAMENTO DE VÍDEOS - Adicione aqui os seus vídeos do YouTube
+const videoMapping = {
+    // Formato: 'nome-do-arquivo-na-api.mp4': 'ID_do_vídeo_YouTube'
+    '4986e520-f0a6-11f0-b6f7-17a0a54d0877-Sara_Costa_Video.mp4': 'DPU2SjNSMrc',
+    // Adicione mais vídeos aqui usando apenas o ID:
+    // 'outro-video.mp4': 'abc123xyz',
+};
 
 /**
- * Fetches works/projects from the API
+ * Converte URL ou ID do YouTube para formato embed válido
  */
+function getYouTubeEmbedUrl(input) {
+    // Se é apenas o ID (sem http/https)
+    if (!input.includes('http') && !input.includes('/')) {
+        return `https://www.youtube-nocookie.com/embed/${input}`;
+    }
+    
+    // Se já é embed, troca para youtube-nocookie
+    if (input.includes('/embed/')) {
+        const videoId = input.split('/embed/')[1].split('?')[0];
+        return `https://www.youtube-nocookie.com/embed/${videoId}`;
+    }
+    
+    // Converte youtu.be para embed
+    if (input.includes('youtu.be/')) {
+        const videoId = input.split('youtu.be/')[1].split('?')[0];
+        return `https://www.youtube-nocookie.com/embed/${videoId}`;
+    }
+    
+    // Converte youtube.com/watch para embed
+    if (input.includes('youtube.com/watch')) {
+        const urlParams = new URLSearchParams(input.split('?')[1]);
+        const videoId = urlParams.get('v');
+        return `https://www.youtube-nocookie.com/embed/${videoId}`;
+    }
+    
+    return input;
+}
+
 function fetchWorks() {
     fetch(urlw)
         .then(response => {
@@ -31,26 +67,20 @@ function fetchWorks() {
         .catch(error => console.error('Fetching error:', error));
 }
 
-/**
- * Cria os botões de filtro baseados nas categorias únicas
- */
 function createFilterButtons(projects) {
     const workContainer = document.getElementById('work-container');
     if (!workContainer) return;
 
-    // Extrai categorias únicas
     const filters = [...new Set(projects
         .map(p => p.metadata.category?.filter)
         .filter(Boolean)
     )];
 
-    // Remove o conteúdo antigo da div.blu se existir
     const oldBlu = workContainer.querySelector('.blu');
     if (oldBlu) {
         oldBlu.remove();
     }
 
-    // Cria novo container de filtros
     const filterDiv = document.createElement('div');
     filterDiv.className = 'blu';
 
@@ -58,7 +88,6 @@ function createFilterButtons(projects) {
     filterTitle.textContent = 'Projetos';
     filterDiv.appendChild(filterTitle);
 
-    // Cria container dos botões
     const filterButtons = document.createElement('div');
     filterButtons.className = 'project-filters';
     filterButtons.style.cssText = `
@@ -68,11 +97,9 @@ function createFilterButtons(projects) {
         margin-top: 10px;
     `;
 
-    // Botão "Todos"
     const allButton = createProjectFilterButton('TODOS', 'todos', true);
     filterButtons.appendChild(allButton);
 
-    // Adiciona botões para cada categoria
     filters.forEach(category => {
         const filterName = category?.toUpperCase?.() || category;
         const button = createProjectFilterButton(filterName, category, false);
@@ -80,14 +107,9 @@ function createFilterButtons(projects) {
     });
 
     filterDiv.appendChild(filterButtons);
-
-    // Insere no início do work-container
     workContainer.insertBefore(filterDiv, workContainer.firstChild);
 }
 
-/**
- * Cria um botão de filtro individual
- */
 function createProjectFilterButton(label, filterValue, isActive) {
     const button = document.createElement('p');
     button.className = 'projetos filter-project-btn' + (isActive ? ' active' : '');
@@ -106,7 +128,6 @@ function createProjectFilterButton(label, filterValue, isActive) {
         user-select: none;
     `;
 
-    // Hover effects
     button.addEventListener('mouseenter', () => {
         button.style.color = '#EF2F95';
         button.style.transform = 'translateX(5px)';
@@ -119,7 +140,6 @@ function createProjectFilterButton(label, filterValue, isActive) {
         }
     });
 
-    // Click event
     button.addEventListener('click', () => {
         filterProjects(filterValue);
         updateActiveFilterButton(button);
@@ -128,9 +148,6 @@ function createProjectFilterButton(label, filterValue, isActive) {
     return button;
 }
 
-/**
- * Filtra os projetos baseado na categoria
- */
 function filterProjects(filterValue) {
     currentFilter = filterValue;
 
@@ -144,9 +161,6 @@ function filterProjects(filterValue) {
     displayWorks(filteredProjects);
 }
 
-/**
- * Atualiza o botão ativo
- */
 function updateActiveFilterButton(activeButton) {
     const allButtons = document.querySelectorAll('.filter-project-btn');
 
@@ -159,9 +173,6 @@ function updateActiveFilterButton(activeButton) {
     activeButton.style.color = '#EF2F95';
 }
 
-/**
- * Displays the works/projects in the container
- */
 function displayWorks(projects) {
     const workContainer = document.getElementById('work-container');
     if (!workContainer) {
@@ -169,7 +180,6 @@ function displayWorks(projects) {
         return;
     }
 
-    // Remove apenas a lista de projetos antiga, mantém os filtros
     const oldProjectList = workContainer.querySelector('.project-list');
     const oldHeader = workContainer.querySelector('.work-header');
     const oldNoProjects = workContainer.querySelector('.no-projects');
@@ -178,7 +188,6 @@ function displayWorks(projects) {
     if (oldHeader) oldHeader.remove();
     if (oldNoProjects) oldNoProjects.remove();
 
-    // Se não há projetos
     if (projects.length === 0) {
         const noProjectsMsg = document.createElement('div');
         noProjectsMsg.className = 'no-projects';
@@ -193,7 +202,6 @@ function displayWorks(projects) {
         return;
     }
 
-    // Create the project list
     const projectList = document.createElement('ul');
     projectList.className = 'project-list';
 
@@ -203,7 +211,6 @@ function displayWorks(projects) {
         projectItem.style.opacity = '0';
         projectItem.style.animation = `fadeIn 0.5s ease-out ${index * 0.08}s forwards`;
 
-        // Create the project link with number
         const projectLink = document.createElement('a');
         projectLink.className = 'project-link';
         const projectNumber = String(index + 1).padStart(3, '0');
@@ -214,7 +221,6 @@ function displayWorks(projects) {
         `;
         projectLink.href = '#';
 
-        // Create modal popup
         projectLink.addEventListener('click', (event) => {
             event.preventDefault();
             openProjectModal(project);
@@ -227,13 +233,8 @@ function displayWorks(projects) {
     workContainer.appendChild(projectList);
 }
 
-/**
- * Block body scroll
- */
 function blockBodyScroll() {
     scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-
-    // Guarda a largura atual antes de bloquear (para compensar scrollbar)
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
     document.body.style.overflow = 'hidden';
@@ -243,21 +244,15 @@ function blockBodyScroll() {
     document.body.style.right = '0';
     document.body.style.width = '100%';
 
-    // Compensa a scrollbar para evitar "jump"
     if (scrollbarWidth > 0) {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
 
     document.documentElement.style.overflow = 'hidden';
-
-    // Para iOS/Safari
     document.body.style.height = '100%';
     document.documentElement.style.height = '100%';
 }
 
-/**
- * Restore body scroll
- */
 function restoreBodyScroll() {
     document.body.style.removeProperty('overflow');
     document.body.style.removeProperty('position');
@@ -273,9 +268,6 @@ function restoreBodyScroll() {
     window.scrollTo(0, scrollPosition);
 }
 
-/**
- * Opens the project modal with details
- */
 function openProjectModal(project) {
     const existingModal = document.getElementById('project-modal');
     if (existingModal) existingModal.remove();
@@ -289,7 +281,7 @@ function openProjectModal(project) {
         <div class="slide active">
             <div class="slide-info">
                 <h2>${project.title}</h2>
-                 <p class="modal-date">
+                <p class="modal-date">
                     <strong>Data:</strong> ${project.metadata.date || ''}
                 </p>
                 
@@ -298,30 +290,56 @@ function openProjectModal(project) {
                     ${project.metadata.sinopse || ''}
                 </div>
                 <p>${project.metadata.description || ''}</p>
-
-
             </div>
         </div>
     `;
     dotsHTML += `<span class="slide-dot active" data-index="0"></span>`;
 
-    // Páginas seguintes: Imagens
+    // Páginas seguintes: Imagens e Vídeos
     images.forEach((img, index) => {
-        slidesHTML += `
-            <div class="slide">
-                <img 
-                    src="${img.url}" 
-                    alt="${img.alt_text || project.title}"
-                >
-            </div>
-        `;
+        const fileName = img.url.split('/').pop();
+        const isVideo = fileName.match(/\.(mp4|webm|mov)$/i);
 
-        dotsHTML += `
-            <span 
-                class="slide-dot" 
-                data-index="${index + 1}"
-            ></span>
-        `;
+        if (isVideo && videoMapping[fileName]) {
+            // Vídeo do YouTube - Mostra thumbnail com link
+            const videoId = videoMapping[fileName];
+            const youtubeWatchUrl = `https://www.youtube.com/watch?v=${videoId}`;
+            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            
+            slidesHTML += `
+                <div class="slide">
+                    <a href="${youtubeWatchUrl}" target="_blank" rel="noopener noreferrer" 
+                       style="position: relative; display: block; width: 100%; max-width: 800px; margin: 0 auto; cursor: pointer;">
+                        <img src="${thumbnailUrl}" 
+                             alt="Vídeo no YouTube"
+                             style="width: 100%; height: auto; border: 3px solid #000; border-radius: 12px; display: block;"
+                             onerror="this.src='${img.url}'">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(239, 47, 149, 0.9); color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; backdrop-filter: blur(5px);">
+                            ▶ Ver no YouTube
+                        </div>
+                    </a>
+                </div>
+            `;
+        } else if (isVideo) {
+            // Vídeo direto da API (fallback)
+            slidesHTML += `
+                <div class="slide">
+                    <video controls preload="metadata" playsinline>
+                        <source src="${img.url}" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </div>
+            `;
+        } else {
+            // Imagem normal
+            slidesHTML += `
+                <div class="slide">
+                    <img src="${img.url}" alt="${img.alt_text || project.title}">
+                </div>
+            `;
+        }
+
+        dotsHTML += `<span class="slide-dot" data-index="${index + 1}"></span>`;
     });
 
     const totalSlides = 1 + images.length;
@@ -352,24 +370,19 @@ function openProjectModal(project) {
     `;
 
     document.body.appendChild(modal);
-
-    // Block body scroll
     blockBodyScroll();
 
-    // Event listeners para fechar
     const overlay = modal.querySelector('.modal-overlay');
     const closeBtn = modal.querySelector('.modal-close');
 
     overlay.addEventListener('click', closeProjectModal);
     closeBtn.addEventListener('click', closeProjectModal);
 
-    // Prevenir propagação de eventos no modal-content
     const modalContent = modal.querySelector('.modal-content');
     modalContent.addEventListener('click', (e) => {
         e.stopPropagation();
     });
 
-    // Prevenir scroll touch no overlay
     overlay.addEventListener('touchmove', (e) => {
         e.preventDefault();
     }, { passive: false });
@@ -383,9 +396,6 @@ function openProjectModal(project) {
     }
 }
 
-/**
- * Closes the project modal
- */
 function closeProjectModal() {
     const modal = document.getElementById('project-modal');
     if (modal) {
@@ -393,15 +403,11 @@ function closeProjectModal() {
 
         setTimeout(() => {
             modal.remove();
-            // Restore body scroll
             restoreBodyScroll();
         }, 300);
     }
 }
 
-/**
- * Initialize slideshow functionality
- */
 function initSlideshow() {
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
@@ -410,7 +416,6 @@ function initSlideshow() {
     const nextBtn = document.querySelector('.slide-nav.next');
     const slidesContainer = document.querySelector('.slides');
 
-    // Touch/Swipe variables
     let touchStartX = 0;
     let touchEndX = 0;
     let touchStartY = 0;
@@ -450,7 +455,6 @@ function initSlideshow() {
         });
     });
 
-    // Touch/Swipe functionality
     if (slidesContainer) {
         slidesContainer.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
@@ -465,25 +469,21 @@ function initSlideshow() {
     }
 
     function handleSwipe() {
-        const swipeThreshold = 50; // minimum distance for swipe
+        const swipeThreshold = 50;
         const horizontalDiff = touchStartX - touchEndX;
         const verticalDiff = Math.abs(touchStartY - touchEndY);
 
-        // Only trigger if horizontal swipe is dominant
         if (verticalDiff < swipeThreshold && Math.abs(horizontalDiff) > swipeThreshold) {
             if (horizontalDiff > 0) {
-                // Swipe left - next slide
                 const newIndex = (currentSlide + 1) % slides.length;
                 showSlide(newIndex);
             } else {
-                // Swipe right - previous slide
                 const newIndex = (currentSlide - 1 + slides.length) % slides.length;
                 showSlide(newIndex);
             }
         }
     }
 
-    // Keyboard navigation
     const handleKeyboard = (e) => {
         if (e.key === 'ArrowLeft') {
             const newIndex = (currentSlide - 1 + slides.length) % slides.length;
@@ -496,7 +496,6 @@ function initSlideshow() {
 
     document.addEventListener('keydown', handleKeyboard);
 
-    // Clean up on modal close
     const modal = document.getElementById('project-modal');
     if (modal) {
         const observer = new MutationObserver((mutations) => {
@@ -512,7 +511,6 @@ function initSlideshow() {
     }
 }
 
-// Close modal with ESC key
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeProjectModal();
@@ -521,3 +519,40 @@ document.addEventListener('keydown', (e) => {
 
 fetchWorks();
 
+function enablePostImageClick() {
+    // Aguarda um pouco para garantir que as imagens foram carregadas
+    setTimeout(() => {
+        const postsContainer = document.getElementById('posts-container');
+        if (!postsContainer) return;
+        
+        // Seleciona todos os posts
+        const posts = postsContainer.querySelectorAll('.post');
+        
+        posts.forEach(post => {
+            const img = post.querySelector('img');
+            const title = post.querySelector('h2')?.textContent;
+            
+            if (img && title) {
+                img.style.cursor = 'pointer';
+                
+                img.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Busca o projeto pelo título
+                    const project = allProjects.find(p => p.title === title);
+                    
+                    if (project) {
+                        openProjectModal(project, 0);
+                    }
+                });
+            }
+        });
+    }, 500);
+}
+
+// Inicialização
+fetchWorks();
+
+// Ativa o click nas imagens dos posts após carregar os projetos
+setTimeout(enablePostImageClick, 1000);
