@@ -352,7 +352,7 @@ ul {
 }
 
 h2 {
-    margin: 0;
+    margin: 7px 0;
 }
 
 /* Work Container Styling */
@@ -1007,6 +1007,7 @@ footer a {
 footer a:hover {
   color: #EF2F95;
 }
+
 
 
 
