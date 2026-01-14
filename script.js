@@ -1,4 +1,4 @@
-const url = "https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780-938e-11ee-bad3-c399e8060022/objects?pretty=true&query=%7B%22type%22:%22project1s%22%7D&limit=10&skip=0&read_key=7C8tqJzO9S1KnNTyo7v5vs5kHvk9eoUBUpOlEkGFqEzwGodRBj&depth=1&props=slug,title,metadata";
+const url = "https://api.cosmicjs.com/v3/buckets/my-project-production-79a15780-938e-11ee-bad3-c399e8060022/objects?pretty=true&query=%7B%22type%22:%22project1s%22%7D&limit=10&skip=0&read_key=7C8tqJzO9S1KnNTyo7v5vs5kHvk9eoUBUpOlEkGFqEzwGodRBj&depth=1&sort=created_at&props=slug,title,metadata";
 
 // Function to fetch posts
 function fetchPosts() {
@@ -23,7 +23,14 @@ function displayPosts(posts) {
         return;
     }
 
-    posts.forEach(post => {
+    // Ordena os posts pela data (mais recente primeiro)
+    const sortedPosts = [...posts].sort((a, b) => {
+        const dateA = a.metadata.date ? new Date(a.metadata.date) : new Date(0);
+        const dateB = b.metadata.date ? new Date(b.metadata.date) : new Date(0);
+        return dateB - dateA; // Ordem decrescente (mais recente primeiro)
+    });
+
+    sortedPosts.forEach(post => {
         const postElement = document.createElement('div');
         postElement.className = 'post';
 
@@ -39,10 +46,10 @@ function displayPosts(posts) {
 
             // Construct HTML for displaying the post information
             postElement.innerHTML = `
-               <h3>${categoryName}</h3>
+                <h3>${categoryName}</h3>
                 <h2>${post.title}</h2>
+                ${sinopse ? `<p>${sinopse}</p>` : ''}
                 ${imageUrl ? `<img src="${imageUrl}" alt="${post.title} Image">` : ''}
-                ${sinopse ? `<p><strong>Ferramentas:</strong> ${sinopse}</p>` : ''}
                 ${description ? `<p>${description}</p>` : ''}
                 ${date ? `<p id="date">Date: ${date}</p>` : ''}
             `;
@@ -94,5 +101,3 @@ window.addEventListener("load", () => {
 
     }, 5000);
 });
-
-
