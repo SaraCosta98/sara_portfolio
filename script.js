@@ -48,10 +48,10 @@ function displayPosts(posts) {
             postElement.innerHTML = `
                 <h3>${categoryName}</h3>
                 <h2>${post.title}</h2>
-                ${sinopse ? `<p>${sinopse}</p>` : ''}
                 ${imageUrl ? `<img src="${imageUrl}" alt="${post.title} Image">` : ''}
+                 ${sinopse ? `<p><strong>Ferramentas: </strong>${sinopse}</p>` : ''}
                 ${description ? `<p>${description}</p>` : ''}
-                ${date ? `<p id="date">Date: ${date}</p>` : ''}
+                ${date ? `<p id="date">Data: ${date}</p>` : ''}
             `;
             postsContainer.appendChild(postElement);
         } else {
@@ -101,3 +101,4 @@ window.addEventListener("load", () => {
 
     }, 5000);
 });
+
