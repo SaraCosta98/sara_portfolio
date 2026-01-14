@@ -517,8 +517,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-fetchWorks();
-
 function enablePostImageClick() {
     // Aguarda um pouco para garantir que as imagens foram carregadas
     setTimeout(() => {
@@ -543,7 +541,7 @@ function enablePostImageClick() {
                     const project = allProjects.find(p => p.title === title);
                     
                     if (project) {
-                        openProjectModal(project, 0);
+                        openProjectModal(project);
                     }
                 });
             }
@@ -551,8 +549,6 @@ function enablePostImageClick() {
     }, 500);
 }
 
-// Inicialização
+// Inicialização - APENAS UMA VEZ
 fetchWorks();
-
-// Ativa o click nas imagens dos posts após carregar os projetos
 setTimeout(enablePostImageClick, 1000);
