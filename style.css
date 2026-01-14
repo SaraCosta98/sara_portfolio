@@ -566,7 +566,7 @@ ul {
 .slide img {
     height: auto;
     width: auto;
-    max-width: 300px;
+    max-width: 400px;
     max-height: 400px;
     object-fit: scale-down;
     border: 3px solid #000;
@@ -863,3 +863,4 @@ footer a:hover {
         font-size: 0.875rem;
     }
 }
+
